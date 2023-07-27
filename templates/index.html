@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>System Monitoring</title>
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+    <!-- <div id="myPlot" style="width:100%;max-width:700px"></div> -->
+    <style>
+        .plotly-graph-div {
+            margin: auto;
+            width: 30%;
+            background-color: rgb(0, 102, 255);
+            padding: 30px;
+        }
+    </style>
+</head>
+<body>
+    
+    <div class="container">
+        <h1 style="color:rgb(48, 33, 191);font-size:40px;"><center>System Monitoring</center></h1>
+        {% if message %}
+        <!-- <div class="alert alert-danger">{{ message }}</div> -->
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <style>
+        .alert {
+        padding: 10px;
+        background-color: #f44336;
+        color: white;
+        }
+
+        .closebtn {
+        margin-left: 15px;
+        color: white;
+        font-weight: bold;
+        float: right;
+        font-size: 22px;
+        line-height: 20px;
+        cursor: pointer;
+        transition: 0.3s;
+        }
+
+        .closebtn:hover {
+        color: black;
+        }
+        </style>
+        </head>
+        <body>
+        <div class="alert">
+        <span class="closebtn" onclick="this.parentElement.style.display='none';">&times;</span> 
+        <strong>Danger!</strong> Indicates a dangerous or potentially negative action.
+        <h2>{{message}}</h2>
+        </div>
+        {% endif %}
+        <div style="width:100%;">
+            <div style="width: 50%; height: 100px; float: left;">
+                <div id="cpu-gauge"></div>
+            </div>
+            <div style="margin-left: 50%; height: 100px;"> 
+                <div id="mem-gauge" ></div>
+            </div>
+
+        </div>
+        <!-- <div id="cpu-gauge"></div>
+        <div id="mem-gauge" ></div> -->
+    </div>
+    <script>
+        var cpuGauge = {
+            type: "indicator",
+            mode: "gauge+number",
+            value: {{ cpu_percent }},
+            gauge: {
+                axis: { range: [null, 100] },
+                bar: { color: "#FFFFFF" },
+                bgcolor: "white",
+                borderwidth: 2,
+                bordercolor: "#ccc",
+                steps: [
+                    { range: [0, 50], color: "#40ff00" },
+                    { range: [50, 85], color: "#ffbf00" },
+                    { range: [85, 100], color: "#FF0040" }
+                ],
+                threshold: {
+                    line: { color: "solid ", width: 4 },
+                    thickness: 0.75,
+                    value: {{ cpu_percent }}
+                }
+            }
+        };
+        
+        var memGauge = {
+            type: "indicator",
+            mode: "gauge+number",
+            value: {{ mem_percent }},
+            gauge: {
+                axis: { range: [null, 100] },
+                bar: { color: "#FFFFFF" },
+                bgcolor: "white",
+                borderwidth: 2,
+                bordercolor: "#ccc",
+                steps: [
+                    { range: [0, 50], color: "#40ff00" },
+                    { range: [50, 85], color: "#ffbf00" },
+                    { range: [85, 100], color: "#FF0040" }
+                ],
+                threshold: {
+                    line: { color: "solid", width: 4 },
+                    thickness: 0.75,
+                    value: {{ mem_percent }}
+                }
+            }
+        };
+        
+        var cpuGaugeLayout = {title : "CPU Utilization"};
+        var memGaugeLayout = { title: "Memory Utilization" };
+        Plotly.newPlot('cpu-gauge', [cpuGauge], cpuGaugeLayout);
+        Plotly.newPlot('mem-gauge', [memGauge], memGaugeLayout);
+    </script>
+</body>
+</html>
